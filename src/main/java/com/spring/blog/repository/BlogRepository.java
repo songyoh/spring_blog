@@ -23,4 +23,23 @@ public interface BlogRepository {
     // n개의 복수 Blog 엔터티를 받아와야 하므로 List로 감싼다
     // public List<엔터티명> 전제데이터조회할이름();
     List<Blog> findAll();
+
+    // 단일행 조회 기능 findById()
+    // blogId를 요구한다
+    Blog findById(long blogId);
+
+    // 새 데이터 저장 기능 save()
+    // 저장시 writer, blogTitle, blogContent 3개 파라미터를 요구함
+    // 위 3개 파라미터는 Blog 엔터티의 멤버변수형
+    void save(Blog blog);
+
+    // 데이터 삭제 기능 deleteById()
+    // 삭제시 해당기능에 필요한 primary key에 해당하는 아이디값을 요구
+    void deleteById(long blogId);
+
+    // 데이터 수정 기능
+    // JPA에서는 .save()를 동일하게 쓰지만, 현재 코드에서 메소드 오버로딩도 불가하고
+    // 분리할 방법이 없으므로 메소드명을 다르게 사용한다.
+    void update(Blog blog);
+
 }

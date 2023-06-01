@@ -7,9 +7,46 @@
 
     <!-- 리턴타입이 entity등의 클래스로 구성된 경우 패키지명부터 적어준다 -->
     <select id="findAll" resultType="com.spring.blog.entity.Blog">
-        SELECT * FROM blog
+        SELECT
+            blog_id as blogId,
+            writer,
+            blog_title as blogTitle,
+            blog_content as blogContent,
+            published_at as publishedAt,
+            updated_at as updatedAt,
+            blog_count as blogCount
+        FROM
+            blog
     </select>
 
+    <!-- insert 태그를 이용해 사전 세팅만 해보자 -->
+    <insert id="save" parameterType="com.spring.blog.entity.Blog">
+        INSERT INTO
+            blog (writer, blog_title, blog_content)
+        VALUES
+            (#{writer}, #{blogTitle}, #{blogContent})
+    </insert>
+
+    <!-- delete 태그를 이용해서 deleteById 메소드를 구현해보자 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM
+                blog
+            WHERE
+                blog_id = #{blogId}
+    </delete>
+
+    <!-- 수정로직을 아래에 쿼리문까지 작성해주자.
+         바꿀 항목: 제목, 본문, 업데이트시각(서버시각) -->
+    <update id="update" parameterType="com.spring.blog.entity.Blog">
+        UPDATE
+            blog
+        SET
+            blog_title = #{blogTitle},
+            blog_content = #{blogContent},
+            updated_at = now()
+        WHERE
+            blog_title = #{blogTitle}
+    </update>
 
 
     <!-- 테스트를 위한 쿼리문들 -->
@@ -24,14 +61,38 @@
             blog_count int default 0
         )
     </update>
+
+    <!-- 위의 select 태그를 참조하여 방금만든 findById를 연결하고, 리턴자료도 매칭해보자 -->
+    <select id="findById" resultType="com.spring.blog.entity.Blog">
+        SELECT
+            blog_id as blogId,
+            writer,
+            blog_title as blogTitle,
+            blog_content as blogContent,
+            published_at as publishedAt,
+            updated_at as updatedAt,
+            blog_count as blogCount
+        FROM
+            blog
+        WHERE
+            blog_id = #{blogId}
+    </select>
+
+
     <update id="dropBlogTable">
         DROP TABLE blog
     </update>
+
     <insert id="insertTestData">
         INSERT INTO blog VALUES
-        (null, '1번유저', '1번제목', '1번본문', now(), now(), null),
-        (null, '2번유저', '2번제목', '2번본문', now(), now(), null),
-        (null, '3번유저', '3번제목', '3번본문', now(), now(), null)
+            (null, '1번유저', '1번제목', '1번본문', now(), now(), null),
+            (null, '2번유저', '2번제목', '2번본문', now(), now(), null),
+            (null, '3번유저', '3번제목', '3번본문', now(), now(), null)
     </insert>
+
+
+
+
+
 
 </mapper>
