@@ -140,4 +140,14 @@ junit.jupiter.execution.parallel.mode.default=concurrent
 junit.jupiter.execution.parallel.config.strategy=dynamic
 junit.jupiter.execution.parallel.config.dynamic.factor=1
 ```
+
+- enabled : 병렬실행여부(true/false)
+- mode.classes.default : 클래스 단위 병렬수행여부(same_thread / concurrent)
+- mode.default : 함수 단위 동일 스레드(same_thread / concurrent)
+- config.strategy : 병렬수행 및 스레드 풀 전략(dynamic<자동 최적화 계산> / fixed<임의의 값 지정>)
+- config.dynamic.factor : dynamic 전략 채택시 곱할 인자 수(1은 cpu의 코어 숫자만큼 채택)
+
+
+위 파일을 생성하고 설정을 위와같이 하고 테스트 코드를 돌리면 동시에 돌아가는것을 볼 수 있다.
+
 - 3번째줄의 concurrent 에서 same_thread로 바꾸면 다시 순차적으로 test코드가 실행된다
