@@ -103,3 +103,41 @@ public class 테스트코드작성을위한 클래스명 {}
 ```
 
 형식으로 작성해주세요.
+
+---
+## 테스트 코드 고도화 1(트랜잭션 활용)
+
+일반적으로 배포를 위한 빌드는 테스트코드를 모두 통과해야만 완료되게 설정한다.
+
+당연히 모든 기능이 돌아간다는 전제가 되어야 배포를 할 수 있기 때문이다.
+
+그러나 불행하게도 많은 테스트를 진행하는데 매번 테이블을 생성했다 지웠다 하는것은 비효율적이다.
+
+따라서 트랜잭션을 걸고, 메소드단위로 커밋을 하지 않는 방식으로 
+
+격리성을 지키면서도 DB를 매 단위마다 초기화할 수 있다.
+
+방법은 아래와 같이 @Test가 붙은 메소드에 추가로 @Transactional을 붙이면 된다.
+```
+@Test
+@Transactional
+public void 테스트메소드(){
+...
+}
+```
+---
+## 테스트 코드 고도화 2 (병렬처리)
+src/test/resources/junit-platform.properties 파일을 만들어
+
+아래 구문을 추가하고, test코드를 실행해보면
+
+test 메소드들을 한꺼번에 검증해준다(동시에 진행되어 속도가 빨라짐)
+
+```
+junit.jupiter.execution.parallel.enabled=true
+junit.jupiter.execution.parallel.mode.classes.default=concurrent
+junit.jupiter.execution.parallel.mode.default=concurrent
+junit.jupiter.execution.parallel.config.strategy=dynamic
+junit.jupiter.execution.parallel.config.dynamic.factor=1
+```
+- 3번째줄의 concurrent 에서 same_thread로 바꾸면 다시 순차적으로 test코드가 실행된다

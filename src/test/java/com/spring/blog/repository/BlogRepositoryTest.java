@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // DROP TABLE시 필요한 어노테이션
+@TestInstance(TestInstance.Lifecycle.PER_METHOD) // DROP TABLE시 필요한 어노테이션
 public class BlogRepositoryTest {
 
     @Autowired
@@ -106,10 +106,37 @@ public class BlogRepositoryTest {
     }
 
     @Test
+    @DisplayName("2번글의 제목을 '수정한제목'으로, 본문도 '수정한본문'으로 수정 후 확인")
     public void updateTest(){
-        // given
-        // when
-        // then
+        // given 준비 : 2번글 원본 데이터를 얻어온다음 blogTitle, blogContent내용만 수정해서 다시 update()
+        // Blog객체를 생성해 BlogId의 blogTitle, blogContent 내용만 setter로 주입해 다시 update()
+
+        // fixture 생성
+        long blogId = 2;
+        String blogTitle = "수정한제목";
+        String blogContent = "수정한본문";
+
+        /*// 1번 given 실행
+        Blog blog = blogRepository.findById(blogId); // 수정한내역을 반영한 엔터티 생성
+        System.out.println(blog);
+        blog.setBlogTitle(blogTitle);
+        blog.setBlogContent(blogContent);
+        System.out.println(blog);*/
+
+        // 2번 given 실행
+        Blog blog = Blog.builder() // 빌더패턴 시작
+                .blogId(blogId)
+                .blogTitle(blogTitle)
+                .blogContent(blogContent)
+                .build(); // 빌더패턴 끝
+
+        // when 실행 : 수정내역을 DB에 반영해주기
+        blogRepository.update(blog);
+
+        // then 결과 : 바뀐 2번글의 타이틀은 "수정한제목", 본문은 "수정한본문"으로 변환 되었을 것이다.
+        assertEquals(blogTitle, blogRepository.findById(blogId).getBlogTitle());
+        assertEquals(blogContent, blogRepository.findById(blogId).getBlogContent());
+
     }
 
 
@@ -119,6 +146,8 @@ public class BlogRepositoryTest {
         blogRepository.dropBlogTable(); // blog 테이블 지우기
     }
 
-
+    // 이렇게 코드를 짰을 때 이슈 발생
+    // 1. 테스트 할 때마다 생성,삭제(@BeforeEach,@AfterEach)로 인한 메모리의 부담(표면적 이슈) - 비효율적
+    // 2.
 
 }
