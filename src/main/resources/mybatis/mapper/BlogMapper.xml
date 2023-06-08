@@ -6,6 +6,7 @@
 <mapper namespace="com.spring.blog.repository.BlogRepository">
 
     <!-- 리턴타입이 entity등의 클래스로 구성된 경우 패키지명부터 적어준다 -->
+    <!-- 블로그 게시글 역순으로 정렬(최신글이 위로 올라오게)-->
     <select id="findAll" resultType="com.spring.blog.entity.Blog">
         SELECT
             blog_id as blogId,
@@ -17,6 +18,8 @@
             blog_count as blogCount
         FROM
             blog
+        ORDER BY
+            blog_id DESC
     </select>
 
     <!-- insert 태그를 이용해 사전 세팅만 해보자 -->

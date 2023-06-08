@@ -28,7 +28,8 @@
                 </div>
             </div>
             <form action="/update" method="POST">
-                <a href="/blog/detail/${blog.blogId}" class="btn btn-primary">수정하기</a>
+                <input type="hidden" value="${blog.blogId}" name="blogId">
+                <input type="submit" class="btn btn-primary" value="수정하기">
             </form>            
         </form>
     </div>

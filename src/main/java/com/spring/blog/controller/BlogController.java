@@ -32,7 +32,7 @@ public class BlogController {
     // 2. 얻어온 게시글 .jsp로 보낼 수 있도록 적재
     // 3. .jsp 에서 볼 수 있도록 출력
     // 해당 파일의 이름은 board/list.jsp
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping("/list")
     public String list(Model model){
         List<Blog> blogList = blogService.findAll();
         model.addAttribute("blogList", blogList);
@@ -116,8 +116,9 @@ public class BlogController {
         // 받아온 blog 엔터티로 글 수정
         blogService.update(blog);
         // redirect는 해당 글번호의 detail페이지로 넘어가게 하고,
+        return "redirect:/blog/detail/"+blog.getBlogId();
         // 어려울 경우 list로 넘어가게 해보자
-        return "/blog/list";
+        //return "redirect:/blog/detail/";
     }
 
 
