@@ -112,8 +112,8 @@ public class ReplyRepositoryTest {
         ReplyFindByIdDTO result = replyRepository.findByReplyId(replyId);
         assertEquals(replyWriter, result.getReplyWriter());
         assertEquals(replyContent, result.getReplyContent());
-//        System.out.println(result);
-//        assertFalse(result.getPublishedAt().equals(result.getUpdatedAt()));
+        //System.out.println(result);
+        //assertFalse(result.getPublishedAt().equals(result.getUpdatedAt()));
         assertTrue(result.getUpdatedAt().isAfter(result.getPublishedAt())); //updatedAt이 publishedAt보다 이후시점(after)이다 이것이 true일 것(assertTrue)이다라고 단언
     }
 
