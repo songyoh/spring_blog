@@ -64,9 +64,24 @@ public class ReplyController {
                                             // Rest컨트롤러는 데이터를 json으로 주고받음.
                                             // 따라서 @RequestBody를 이용해 json으로 들어온 데이터를 역직렬화 하도록 설정
     public ResponseEntity<String> insertReply(@RequestBody ReplyInsertDTO replyInsertDTO){
+        //System.out.println("데이터 들어오는지 확인: "+replyInsertDTO);
+//        if(replyInsertDTO.getReplyWriter() == null){
+//            throw new NotFoundReplyWriterException("댓글을 입력하시오.");
+//        }
         replyService.save(replyInsertDTO);
         return ResponseEntity
                 .ok("댓글이 등록되었습니다.");
     }
+
+    // delete 방식으로 /reply/{댓글번호} 주소로 요청이 들어왔을때 실행되는 메서드 deleteReply()를 작성
+    @RequestMapping(value = "/{repl" +
+            "" +
+            "yId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteReply(@PathVariable long replyId){
+        replyService.deleteByReplyId(replyId);
+
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
+    }
+
 
 }

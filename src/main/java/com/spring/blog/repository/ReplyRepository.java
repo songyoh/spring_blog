@@ -3,7 +3,6 @@ package com.spring.blog.repository;
 import com.spring.blog.dto.ReplyFindByIdDTO;
 import com.spring.blog.dto.ReplyInsertDTO;
 import com.spring.blog.dto.ReplyUpdateDTO;
-import com.spring.blog.entity.Reply;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -28,5 +27,8 @@ public interface ReplyRepository {
     // 수정로직은 replyId를 WHERE절에 집어넣고, replyWriter, replyContent의 내용을 업뎃해주고
     // updatedAt 역시 now()로 바꿔준다.
     void update(ReplyUpdateDTO replyUpdateDTO);
+
+    // BlogId를 받아 특정 글과 연계된 댓글 전체를 삭제하는 메서드 정의
+    void deleteByBlogId(long blogId);
 
 }

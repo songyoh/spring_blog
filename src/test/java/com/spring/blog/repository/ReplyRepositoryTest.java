@@ -117,4 +117,17 @@ public class ReplyRepositoryTest {
         assertTrue(result.getUpdatedAt().isAfter(result.getPublishedAt())); //updatedAt이 publishedAt보다 이후시점(after)이다 이것이 true일 것(assertTrue)이다라고 단언
     }
 
+    @Test
+    @Transactional
+    @DisplayName("blogId가 2인 글 삭제시, 삭제한 글의 댓글 전체 조회시 0일 것이다")
+    public void deleteByBlogIdTest(){
+        // given
+        long blogId = 2;
+        // when
+        replyRepository.deleteByBlogId(blogId);
+        // then : blogId번 글 전체 댓글을 얻어와서 길이가 0인지 확인
+        List<ReplyFindByIdDTO> resultList = replyRepository.findAllByBlogId(blogId);
+        assertEquals(0, resultList.size());
+    }
+
 }
