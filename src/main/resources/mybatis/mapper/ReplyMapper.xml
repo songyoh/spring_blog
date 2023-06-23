@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- xml파일에는 SQL구문만 따로 작성하기 때문에 자바 메소드를 선언할 연동인터페이스를 매칭시켜준다. -->
 <mapper namespace="com.spring.blog.repository.ReplyRepository">
-    <select id="findAllByBlogId" resultType="com.spring.blog.dto.ReplyFindByIdDTO" parameterType="long">
+    <select id="findAllByBlogId" resultType="com.spring.blog.dto.ReplyResponseDTO" parameterType="long">
         SELECT
             reply_id as replyId,
             reply_writer as replyWriter,
@@ -17,7 +17,7 @@
             blog_id = #{blogId}
     </select>
 
-    <select id="findByReplyId" resultType="com.spring.blog.dto.ReplyFindByIdDTO" parameterType="long">
+    <select id="findByReplyId" resultType="com.spring.blog.dto.ReplyResponseDTO" parameterType="long">
         SELECT
             reply_id as replyId,
             reply_writer as replyWriter,
@@ -37,14 +37,14 @@
             reply_id = #{replyId}
     </delete>
     
-    <insert id="save" parameterType="com.spring.blog.dto.ReplyInsertDTO">
+    <insert id="save" parameterType="com.spring.blog.dto.ReplyCreateRequestDTO">
         INSERT INTO
             reply(blog_id, reply_writer, reply_content)
         VALUES
             (#{blogId}, #{replyWriter}, #{replyContent})
     </insert>
 
-    <update id="update" parameterType="com.spring.blog.dto.ReplyUpdateDTO">
+    <update id="update" parameterType="com.spring.blog.dto.ReplyUpdateRequestDTO">
         UPDATE
             reply
         SET

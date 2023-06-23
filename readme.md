@@ -151,3 +151,10 @@ junit.jupiter.execution.parallel.config.dynamic.factor=1
 위 파일을 생성하고 설정을 위와같이 하고 테스트 코드를 돌리면 동시에 돌아가는것을 볼 수 있다.
 
 - 3번째줄의 concurrent 에서 same_thread로 바꾸면 다시 순차적으로 test코드가 실행된다
+
+---
+## DTO 명칭 수정
+
+- ReplyInsertDTO -> ReplyCreateRequestDTO
+- ReplyFindByIdDTO -> ReplyResponseDTO
+- ReplyUpdateDTO -> ReplyUpdateRequestDTO
