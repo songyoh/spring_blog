@@ -21,12 +21,12 @@ public interface ReplyRepository {
     // 삽입구문은 ReplyInsertDTO를 이용해 사용한다. save 메서드 정의
     // ReplyInsertDTO에 내장된 멤버변수인 blogId(몇번글에), replyWriter(누가), replyContent(무슨내용)
     // 들을 쿼리문에 전달해서 INSERT구문을 완성시키기 위함
-    void save(ReplyCreateRequestDTO replyInsertDTO);
+    void save(ReplyCreateRequestDTO replyCreateRequestDTO);
 
     // 수정로직은 ReplyUpdateDTO를 이용해 update 메서드를 호출해 처리한다
     // 수정로직은 replyId를 WHERE절에 집어넣고, replyWriter, replyContent의 내용을 업뎃해주고
     // updatedAt 역시 now()로 바꿔준다.
-    void update(ReplyUpdateRequestDTO replyUpdateDTO);
+    void update(ReplyUpdateRequestDTO replyUpdateRequestDTO);
 
     // BlogId를 받아 특정 글과 연계된 댓글 전체를 삭제하는 메서드 정의
     void deleteByBlogId(long blogId);
