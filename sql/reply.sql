@@ -7,7 +7,7 @@ CREATE TABLE reply(
     published_at datetime default now(),
     updated_at datetime default now()
 );
-# 외래키 설정
+# 외래키 설정(트래픽을 잘 버틸 수 있게)
 # blog_id에는 기존에 존재하는 글의 blog_id만 들어가야 한다.
 alter table reply add constraint fk_reply foreign key (blog_id) references blog(blog_id);
 

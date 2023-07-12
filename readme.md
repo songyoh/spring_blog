@@ -158,3 +158,5 @@ junit.jupiter.execution.parallel.config.dynamic.factor=1
 - ReplyInsertDTO -> ReplyCreateRequestDTO
 - ReplyFindByIdDTO -> ReplyResponseDTO
 - ReplyUpdateDTO -> ReplyUpdateRequestDTO
+
+---

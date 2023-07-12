@@ -1,6 +1,8 @@
 package com.spring.blog.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
 
@@ -8,11 +10,34 @@ import java.time.LocalDateTime;
 // 한 번 생성된 데이터가 변경될 가능성을 없앤다.
 @Getter @ToString @Builder
 @AllArgsConstructor @NoArgsConstructor
+@Entity @Setter
 public class Reply {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long replyId;
+
+    @Column(nullable = false)
     private long blogId;
+
+    @Column(nullable = false)
     private String replyWriter;
+
+    @Column(nullable = false)
     private String replyContent;
-    private LocalDateTime publishedAt ;
+
+    private LocalDateTime publishedAt;
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void setDefaultValue(){
+        this.publishedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void setUpdatedValue(){
+        this.updatedAt = LocalDateTime.now();
+    }
+
 }
