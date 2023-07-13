@@ -6,6 +6,9 @@ import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.ReplyJPARepository;
 import com.spring.blog.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +37,21 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public List<Blog> findAll() {
+    //public List<Blog> findAll() {
+    public Page<Blog> findAll(Long pageNum){ // 페이지 정보를 함께 포함하고 있는 리스트인 Page를 리턴해야 함
         /*List<Blog> blogList = blogRepository.findAll();
         return blogList;*/
         //return blogRepository.findAll(); <- Mybatis를 활용한 전체 글 가져오기
-        return blogJPARepository.findAll(); // <- JPA를 활용한 전체 글 가져오기
+        //return blogJPARepository.findAll(); // <- JPA를 활용한 전체 글 가져오기
+
+        int calibratedPageNum = getCalibratedPageNum(pageNum);
+
+        // 페이징 처리에 관련된 정보를 먼저 객체로 생성
+        //Pageable pageable = PageRequest.of(page:2, size:10); 예시코드, 실제로는 3번 페이지를 조회하는 구문(0페이지 부터 시작되므로)
+        //Pageable pageable = PageRequest.of(getCalibratedPageNum(pageNum),10); // 리팩토링
+        Pageable pageable = PageRequest.of((calibratedPageNum - 1),10); // 리팩토링
+        // 생성된 페이징 정보를 파라미터로 제공해서 findAll()을 호출한다.
+        return blogJPARepository.findAll(pageable);
     }
 
     @Override
@@ -56,7 +69,7 @@ public class BlogServiceImpl implements BlogService{
         //replyRepository.deleteByBlogId(blogId);
         //blogRepository.deleteById(blogId);
         // 댓글 삭제가 진행되도록
-        replyJPARepository.deleteById(blogId);
+        replyJPARepository.deleteAllByBlogId(blogId);
         blogJPARepository.deleteById(blogId);
     }
 
@@ -79,5 +92,18 @@ public class BlogServiceImpl implements BlogService{
         //blogRepository.update(blog);
     }
 
+    // 보정된 pageNum으로 가공해주는 메서드 (pageNum을 정확한 숫자로 교정해주는 역할)
+    public int getCalibratedPageNum(Long pageNum){
+        // 사용자가 페이지입력시 음수를 넘겼거나 아무것도 안 넣은 경우
+        if(pageNum == null || pageNum <= 0L){
+            pageNum = 1L; // 첫번째 페이지로 가도록 하는 구문
+        }else {
+            // 총 페이지 개수를 구하는 로직
+            int totalPagesCount = (int) Math.ceil(blogJPARepository.count() / 10.0);
+
+            pageNum = pageNum > totalPagesCount ? totalPagesCount : pageNum;
+        }
+        return pageNum.intValue();
+    }
 
 }

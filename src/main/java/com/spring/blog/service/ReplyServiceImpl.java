@@ -1,8 +1,5 @@
 package com.spring.blog.service;
 
-import com.spring.blog.dto.ReplyCreateRequestDTO;
-import com.spring.blog.dto.Reply;
-import com.spring.blog.dto.ReplyUpdateRequestDTO;
 import com.spring.blog.entity.Reply;
 import com.spring.blog.repository.ReplyJPARepository;
 import com.spring.blog.repository.ReplyRepository;

@@ -5,6 +5,7 @@ import com.spring.blog.exception.NotFoundBlogIdException;
 import com.spring.blog.service.BlogService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,11 +32,39 @@ public class BlogController {
     // 1. 서비스객체를 이용해 게시글 전체 조회
     // 2. 얻어온 게시글 .jsp로 보낼 수 있도록 적재
     // 3. .jsp 에서 볼 수 있도록 출력
-    // 해당 파일의 이름은 board/list.jsp
-    @RequestMapping("/list")
-    public String list(Model model){
-        List<Blog> blogList = blogService.findAll();
-        model.addAttribute("blogList", blogList);
+    // 해당 파일의 이름은 blog/list.jsp
+
+    // localhost:8080/blog/list/5 -예시
+    // PathVariable에서 null처리를 할 경우는 아래와 같이 경로패턴변수가 포함된 경로와 없는 경로 두 개를 {}로 묶어준다.
+    @RequestMapping({"/list/{pageNum}", "/list"}) //("/list")일 경우 주소장 입력시에는 localhost:8080/blog/list?pageNum={숫자} 입력하면 이동할 수 있다.
+    public String list(Model model, @PathVariable(required = false) Long pageNum){ // @PathVariable(required = false) 이렇게 설정시 null값이 들어올 수 있게된다.
+//        System.out.println("pageNum으로 받은 번호: " + pageNum);
+        //List<Blog> blogList = blogService.findAll();
+        Page<Blog> pageInfo = blogService.findAll(pageNum);
+//        System.out.println("-------------");
+//        System.out.println(blogList.toList());
+
+        // 한 페이지에 보여야 하는 페이징 버튼 그룹의 갯수
+        final int PAGE_BTN_NUM = 10;
+
+        // 현재 조회중인 페이지 번호(0부터 세므로 반드시 +1을 해줘야 함)
+        int currentPageNum = pageInfo.getNumber() + 1; // 현재 조회중인 페이지에 강조하기 위해서 필요한 구문
+
+        // 현재 조회중인 페이지 그룹의 끝번호
+        int endPageNum = (int)Math.ceil(currentPageNum / (double)PAGE_BTN_NUM) * PAGE_BTN_NUM;
+
+        // 현재 조회중인 페이지 그룹의 시작번호
+        int startPageNum = (endPageNum - PAGE_BTN_NUM) + 1;
+
+        // 마지막 그룹번호 보정
+        endPageNum = endPageNum > pageInfo.getTotalPages() ? pageInfo.getTotalPages() : endPageNum;
+
+        // preb
+
+        model.addAttribute("currentPageNum", currentPageNum);
+        model.addAttribute("endPageNum", endPageNum);
+        model.addAttribute("startPageNum", startPageNum);
+        model.addAttribute("pageInfo", pageInfo);
         // /WEB-INF/views/blog/list.jsp
         return  "/blog/list";
     }
