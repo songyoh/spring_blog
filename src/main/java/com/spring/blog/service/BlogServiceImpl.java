@@ -51,6 +51,7 @@ public class BlogServiceImpl implements BlogService{
         //Pageable pageable = PageRequest.of(getCalibratedPageNum(pageNum),10); // 리팩토링
         Pageable pageable = PageRequest.of((calibratedPageNum - 1),10); // 리팩토링
         // 생성된 페이징 정보를 파라미터로 제공해서 findAll()을 호출한다.
+        //return blogJPARepository.findAll();
         return blogJPARepository.findAll(pageable);
     }
 

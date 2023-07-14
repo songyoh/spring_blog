@@ -160,3 +160,8 @@ junit.jupiter.execution.parallel.config.dynamic.factor=1
 - ReplyUpdateDTO -> ReplyUpdateRequestDTO
 
 ---
+
+## 23.07.14) 회원가입기능 추가
+
+---
+
