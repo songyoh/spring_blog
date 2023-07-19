@@ -6,12 +6,14 @@ import com.spring.blog.service.BlogService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller // 1. 빈 등록(컨테이너에의해 관리를 받는 객체), 2. url매핑 처리 기능을 함께 갖음
@@ -74,7 +76,9 @@ public class BlogController {
     // 위 방식으로 글 번호를 입력받아, service를 이용해 해당 글 번호 요소만 얻어서
     // 뷰에 적재하는 코드를 아래쪽에 작성
     @RequestMapping("/detail/{blogId}")
-    public String detail(Model model, @PathVariable long blogId) {
+    public String detail(Model model, @PathVariable long blogId, Principal principal) {
+
+        model.addAttribute("username", principal.getName());
         Blog blog = blogService.findById(blogId);
 
         if(blog == null){
@@ -97,7 +101,15 @@ public class BlogController {
     // 대신 폼 페이지는 GET방식으로 접속했을때 연결하고
     // 폼에서 작성완료된 내용은 POST방식으로 제출해 저장하도록 만들어준다.
     @RequestMapping(value = "/insert", method = RequestMethod.GET)
-    public String insert(){
+    public String insert(Model model, Principal principal){
+        // SecurityContext, Principal은 둘다 인증정보를 갖고 있는 객체이다.
+        // Principal은 .jsp에서 security태그를 이용해 인증정보를 활용할 수 있다는 장점을 가짐
+        // SecurityContext는 내부적으로 사용하고 싶을 때 인증 (Authentication)을 사용하는 것
+        //System.out.println(securityContext);
+        //System.out.println(principal.getName()); // 현재 로그인한 username을 얻어 올 수 있다.
+
+                                        // principal.getName()은 현재 로그인한 유저의 아이디를 리턴합니다.
+        model.addAttribute("username", principal.getName());
         // /WEB-INF/views/blog/blog-form.jsp
         return "blog/blog-form";
     }

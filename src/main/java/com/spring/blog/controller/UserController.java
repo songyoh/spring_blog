@@ -1,5 +1,6 @@
 package com.spring.blog.controller;
 
+import com.spring.blog.entity.User;
 import com.spring.blog.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,8 @@ public class UserController {
     // 커맨드 객체로 User Entity를 선언해, 가입정보를 받아 .save()를 호출하기
     // 실행 결과는 리다이렉트로 /login 으로 돌아가게 하기
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String signUp() {
+    public String signUp(User user) {
+        usersService.save(user);
         return "redirect:/login";
     }
 

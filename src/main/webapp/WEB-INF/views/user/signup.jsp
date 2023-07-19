@@ -9,15 +9,12 @@
 </head>
 <body>
     <div class=".container">
-        <form action="/login" method="post">
-            <div class="id">
-                <!-- 아이디는 username, 비밀번호는 password로 고정 -->
-                <input type="text" name="username" placeholder="아이디">
-            </div>
-            <div class="pw">
-                <input type="password" name="password" placeholder="비밀번호">
-            </div>
-            <input type="submit" value="로그인">
+        <h2>회원가입</h2>
+        <form action="/signup" method="post"> <!-- 어디로 보내는지 목적지 확인! -->
+            아이디: <input type="text" name="loginId" required/><br>
+            이메일: <input type="text" name="email" required/><br>
+            비밀번호: <input type="password" name="password" required/><br>
+            <input type="submit" value="회원가입">
         </form>
     </div>
 </body>

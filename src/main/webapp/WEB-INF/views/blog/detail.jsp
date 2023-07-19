@@ -108,10 +108,13 @@
     </div><!-- .container -->      
     <div class="container">
         <a href="/blog/list"><button class="btn btn-secondary">목록</button></a>
-        <form action="/blog/delete" method="POST"> <!-- 번호 입력시 게시물을 삭제해주는 기능 추가 -->
-            <input type="hidden" name="blogId" value="${blog.blogId}">
-            <input type="submit" class="btn btn-warning" value="삭제하기">
-        </form>
+        <!-- blog의 글쓴이랑 인증정보로 보낸 글쓴이 정보가 일치할때만 버튼 노출 -->
+        <c:if test="${username eq blog.writer}">
+            <form action="/blog/delete" method="POST"> <!-- 번호 입력시 게시물을 삭제해주는 기능 추가 -->
+                <input type="hidden" name="blogId" value="${blog.blogId}">
+                <input type="submit" class="btn btn-warning" value="삭제하기">
+            </form>
+        </c:if>
         <form action="/blog/updateform" method="POST">
             <input type="hidden" name="blogId" value="${blog.blogId}">
             <input type="submit" class="btn btn-info" value="수정하기">
