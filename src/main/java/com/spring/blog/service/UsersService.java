@@ -32,4 +32,9 @@ public class UsersService { // UserService는 "인증"만 담당하고, 나머�
         userRepository.save(newUser);
     }
 
+    // id를 집어넣으면, 해당계정 전체 정보를 얻어올 수 있는 메서드 작성
+    public User getByCredentials(String loginId){
+        return userRepository.findByLoginId(loginId);
+    }
+
 }
