@@ -1,5 +1,6 @@
 package com.spring.blog.config;
 
+import com.spring.blog.config.jwt.TokenProvider;
 import com.spring.blog.service.UserService;
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
 
@@ -22,10 +24,12 @@ public class BasicSecurityConfig { // 베이직 방식 인증을 사용하도록
 
     // 등록할 시큐리티 서비스 멤버변수로 작성하기
     private final UserDetailsService userService;
+    private final TokenProvider tokenProvider; // final을 붙이는 이유는 해당 객체들을 변경할 이유가 없기 때문. 불변성 보장.
 
     @Autowired
-    public BasicSecurityConfig(UserDetailsService userService){
+    public BasicSecurityConfig(UserDetailsService userService, TokenProvider tokenProvider){
         this.userService = userService;
+        this.tokenProvider = tokenProvider;
     }
 
     // 정적 파일이나 .jsp 파일 등 스프링 시큐리티가 기본적으로 적용되지 않을 영역 설정하기.
@@ -59,6 +63,7 @@ public class BasicSecurityConfig { // 베이직 방식 인증을 사용하도록
                 })
                 .logout(logoutConfig -> {
                     logoutConfig
+                            .logoutUrl("/logout") // 디폴트로 "/logout"을 잡아주기 때문에 굳이 설정할 필요 없음
                             .logoutSuccessUrl("/login")
                             .invalidateHttpSession(true);
                 })
@@ -68,6 +73,8 @@ public class BasicSecurityConfig { // 베이직 방식 인증을 사용하도록
                 .csrf(csrfConfig -> {
                     csrfConfig.disable();
                 })
+                // Before시점(Request를 서버가 처리하기 직전 시점)에 해당 필터를 사용해 로그인을 검증하도록 설정
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
 
                 /*
@@ -110,6 +117,11 @@ public class BasicSecurityConfig { // 베이직 방식 인증을 사용하도록
         return new BCryptPasswordEncoder();
     }
 
+    // 필터 클래스 생성(필터 클래스도 빈 컨테이너에 적재되어 있어야 사용 가능하다)
+    @Bean
+    public TokenAuthenticationFilter tokenAuthenticationFilter(){
+        return new TokenAuthenticationFilter(tokenProvider);//new TokenProvider()); // 필터는 생성자에서 토큰제공자(TokenProvider class)를 요구한다.
+    }
 
     // 방화벽 방지
     public void configure(WebSecurity web) throws Exception {

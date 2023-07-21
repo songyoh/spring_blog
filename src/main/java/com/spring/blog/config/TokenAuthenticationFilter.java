@@ -11,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-@RequiredArgsConstructor
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+@RequiredArgsConstructor                       // 토큰기반 인증을 하고싶을때
+public class TokenAuthenticationFilter extends OncePerRequestFilter { //OncePerRequestFilter를 상속하므로 매 요청시 한번씩 토큰검증을 하는 (커스텀필터)
 
     // 토큰제공자 내부의 validToken메서드를 이용해 토큰의 유효성을 검증할 예정이므로 의존성 주입
     private final TokenProvider tokenProvider;
