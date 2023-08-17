@@ -27,6 +27,6 @@ public class RefreshToken {
 
     public RefreshToken update(String newRefreshToken) {
         this.refreshToken = newRefreshToken;
-        return this;
+        return this; // refreshToken을 리턴하겠다.
     } // 토큰값 갱신시 사용할 메서드
 }
