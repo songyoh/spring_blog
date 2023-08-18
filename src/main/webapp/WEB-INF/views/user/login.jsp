@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-    <div class=".container">
+    <div class=".container center">
         <form action="/login" method="post">
             <div class="id">
                 <!-- 세션기반(기본) 로그인에서는 아이디는 username, 비밀번호는 password로 고정
@@ -20,6 +20,9 @@
             </div>
             <input type="submit" value="로그인">
         </form>
+        <!-- 소셜로그인은 /oauth2/authorization/서비스명
+        형식으로 링크를 걸어주면 된다. -->
+        <a href="/oauth2/authorization/google">구글 로그인</a>
     </div>
 </body>
 </html>

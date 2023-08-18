@@ -1,9 +1,12 @@
 package com.spring.blog.config;
 
 import com.spring.blog.config.jwt.TokenProvider;
+import com.spring.blog.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.spring.blog.config.oauth.OAuth2SuccessHandler;
 import com.spring.blog.config.oauth.OAuth2UserCustomService;
 import com.spring.blog.repository.RefreshTokenRepository;
 import com.spring.blog.service.UserService;
+import com.spring.blog.service.UsersService;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,9 @@ public class BasicSecurityConfig { // 베이직 방식 인증을 사용하도록
     // Oauth2.0을 활용하기 위한 객체 추가
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    // UsersService를 OAuth2SuccessHandler가 요구하므로 빈 추가
+    private final UsersService usersService;
 
 //    @Autowired 생성자 주입은 @RequiredArgsStructure 어노테이션으로 대체 된다.
 //    public BasicSecurityConfig(UserDetailsService userService, TokenProvider tokenProvider){
@@ -84,14 +90,13 @@ public class BasicSecurityConfig { // 베이직 방식 인증을 사용하도록
 
                 // Oauth2.0에 관련된 형식으로 설정 추가
                 .oauth2Login(oauth2Config -> {
-                    oauth2Config.loginPage("/login")
+                    oauth2Config.loginPage("/blog/list") //로그인 성공시 넘어갈 페이지
                             .authorizationEndpoint(endpointConfig -> endpointConfig
-                            .authorizationRequestRepository(Oauth2AuthorizationRequestBasedOnCookieRepository()))
+                            .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
                             .successHandler(oAuth2SuccessHandler())
                             .userInfoEndpoint( userInfoConfig -> userInfoConfig
                                     .userService(oAuth2UserCustomService));
                 })
-
 
                 // Before시점(Request를 서버가 처리하기 직전 시점)에 해당 필터를 사용해 로그인을 검증하도록 설정
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -148,18 +153,13 @@ public class BasicSecurityConfig { // 베이직 방식 인증을 사용하도록
     public OAuth2SuccessHandler oAuth2SuccessHandler(){
         return new OAuth2SuccessHandler(tokenProvider,
                                         refreshTokenRepository,
-                                        Oauth2AuthorizationRequestBasedOnCookieRepository,
-                                        userService);
+                                        oAuth2AuthorizationRequestBasedOnCookieRepository(),
+                                        usersService);
     }
 
     @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
-    }
-
-    @Bean
-    public Oauth2AuthorizationRequestBasedOnCookieRepository oauth2AuthorizationRequestBasedOnCookieRepository() {
-        return new Oauth2AuthorizationRequestBasedOnCookieRepository();
+    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
+        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
 
     // 방화벽 방지
